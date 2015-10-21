@@ -9,8 +9,9 @@
         width: $widthMD;
     }
     &-link {
-        color: green;
+        color: blue;
         font-weight: 700;
+        font-size:12px;
     }
     &.is-active {
         display: block;

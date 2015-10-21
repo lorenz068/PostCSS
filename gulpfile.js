@@ -6,7 +6,6 @@ var sourceMaps = require("gulp-sourcemaps");
 var minifyCSS = require("gulp-minify-css");
 var postcss = require("gulp-postcss");
 var plumber = require("gulp-plumber");
-var rename = require("gulp-rename");
 var reporter = require("postcss-reporter")
 var stylelint = require("stylelint");
 var doiuse = require("doiuse");
@@ -14,10 +13,8 @@ var precss = require("precss")
 
 var config = {
     isDev: !!util.env.dev,
-    path : {
-        css: "Content/**/*.css",
-        js: "Content/**/*.js"
-    },
+    ressource : "Content",
+    destination : "./Build",
     supportedBrowsers: [
         "last 2 version",
         "> 5% in ca", 
@@ -28,20 +25,21 @@ var config = {
 /* 
  * Tasks : Defaults
  */
-gulp.task("default", ["watch","css"]);
+gulp.task("default", ["watch","cssApp","cssExternal"]);
 
 /* 
  * Tasks : Watch
  */
 gulp.task("watch", function() {
-    gulp.watch([config.path.css], ["css"]);
+    gulp.watch([config.ressource + "/Css/App/**/*.css" ], ["cssApp"]);
+    gulp.watch([config.ressource + "/Css/External/**/*.css" ], ["cssExternal"]);
 });
 
 /* 
- * Tasks : CSS
+ * Tasks : CSS App
  */
-gulp.task("css", function() {
-  gulp.src(config.path.css, { cwd: process.cwd() })
+gulp.task("cssApp", function() {
+  gulp.src([config.ressource + "/Css/App/**/*.css" ], { cwd: process.cwd() })
   .pipe(plumber())
   .pipe(postcss([
         doiuse({
@@ -55,10 +53,25 @@ gulp.task("css", function() {
         reporter({ clearMessages: true })
     ]))
   .pipe(sourceMaps.init())
-  .pipe(concat("project.name.css"))
+  .pipe(concat("project.app.css"))
+  
+  // In dev write the sourceMaps
   .pipe(minifyCSS())
-  .pipe(rename({ suffix: ".min" }))
-  // In dev write the sourceMaps 
   .pipe(config.isDev ? sourceMaps.write() : util.noop())
-  .pipe(gulp.dest("./build"))
+  .pipe(gulp.dest(config.destination))
+});
+
+/* 
+ * Tasks : CSS External
+ */
+gulp.task("cssExternal", function() {
+  gulp.src([config.ressource + "/Css/External/**/*.css" ], { cwd: process.cwd() })
+  .pipe(plumber())
+  .pipe(sourceMaps.init())
+  .pipe(concat("project.external.css"))
+  
+  // In dev write the sourceMaps
+  .pipe(minifyCSS())
+  .pipe(config.isDev ? sourceMaps.write() : util.noop())
+  .pipe(gulp.dest(config.destination))
 });
