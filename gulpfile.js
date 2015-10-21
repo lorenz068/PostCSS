@@ -14,11 +14,12 @@ var stylelint = require("stylelint");
 var doiuse = require("doiuse");
 var precss = require("precss")
 
-// Check environnement
+// Test environnement
 var isDev = !!util.env.dev
 
 // App Config 
 var config = {
+    destinationPath: "./Build",
     sourcePath: "Content",
     sourceType: {
         css: {
@@ -26,7 +27,6 @@ var config = {
             external: "/Css/External/**/*.css"
         }
     },
-    destinationPath: "./Build",
     supportedBrowsers: [
         "last 2 version",
         "> 5% in ca",
@@ -41,14 +41,15 @@ var config = {
 gulp.task("default", ["cssExternal", "cssApp", "watch"]);
 
 /* 
- * Tasks: watch modifications
+ * Tasks: watch
+ * Build CSS on file modifications
  */
 gulp.task("watch", function () {
     gulp.watch([config.sourcePath + config.sourceType.css.app], ["cssApp"]);
 });
 
 /* 
- * Tasks: Build External CSS
+ * Tasks: Build CSS External
  */
 gulp.task("cssExternal", function () {
     gulp.src([config.sourcePath + config.sourceType.css.external], { cwd: process.cwd() })
@@ -63,14 +64,14 @@ gulp.task("cssExternal", function () {
 });
 
 /* 
- * Tasks: Build CSS of the App
+ * Tasks: Build CSS App
  */
 gulp.task("cssApp", function () {
     gulp.src([config.sourcePath + config.sourceType.css.app], { cwd: process.cwd() })
         .pipe(plumber())
         .pipe(postcss([
         
-            // Check if rules are supported by browser
+            // Check if rules are valid by supported browser
             doiuse({
                 browsers: config.supportedBrowsers,
                 ignore: ["css-mediaqueries"]
@@ -79,7 +80,7 @@ gulp.task("cssApp", function () {
             // Check coding style        
             stylelint({ "extends": "./.stylelintrc" }),
 
-            // Transform in like SASS way        
+            // Transform in SASS way        
             precss(),
 
             // Flag warning if error    
