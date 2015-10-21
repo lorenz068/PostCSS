@@ -1,3 +1,4 @@
+// Add dependencies
 var gulp = require("gulp");
 var path = require("path");
 var util = require("gulp-util");
@@ -11,8 +12,11 @@ var stylelint = require("stylelint");
 var doiuse = require("doiuse");
 var precss = require("precss")
 
+// Check environnement
+var isDev = !!util.env.dev
+
+// Config of the App
 var config = {
-    isDev: !!util.env.dev,
     ressource : "Content",
     destination : "./Build",
     supportedBrowsers: [
@@ -24,32 +28,40 @@ var config = {
 
 /* 
  * Tasks : Defaults
+ * By default build CSS & watch modifications 
  */
-gulp.task("default", ["watch","cssApp","cssExternal"]);
+gulp.task("default", ["cssApp","cssExternal","watch"]);
 
 /* 
- * Tasks : Watch
+ * Tasks : watch modifications
  */
 gulp.task("watch", function() {
     gulp.watch([config.ressource + "/Css/App/**/*.css" ], ["cssApp"]);
-    gulp.watch([config.ressource + "/Css/External/**/*.css" ], ["cssExternal"]);
 });
 
 /* 
- * Tasks : CSS App
+ * Tasks : Build CSS of the App
  */
 gulp.task("cssApp", function() {
   gulp.src([config.ressource + "/Css/App/**/*.css" ], { cwd: process.cwd() })
   .pipe(plumber())
   .pipe(postcss([
+        
+        // Check if rules are supported by browser
         doiuse({
             browsers: config.supportedBrowsers,
             ignore: ["css-mediaqueries"]
         }),
+
+        // Check coding style        
         stylelint(
             {"extends": "./.stylelintrc"}
         ),
+
+        // Transform CSS like SASS        
         precss(),
+
+        // Flag warning        
         reporter({ clearMessages: true })
     ]))
   .pipe(sourceMaps.init())
@@ -57,7 +69,7 @@ gulp.task("cssApp", function() {
   
   // In dev write the sourceMaps
   .pipe(minifyCSS())
-  .pipe(config.isDev ? sourceMaps.write() : util.noop())
+  .pipe(isDev ? sourceMaps.write() : util.noop())
   .pipe(gulp.dest(config.destination))
 });
 
@@ -72,6 +84,6 @@ gulp.task("cssExternal", function() {
   
   // In dev write the sourceMaps
   .pipe(minifyCSS())
-  .pipe(config.isDev ? sourceMaps.write() : util.noop())
+  .pipe(isDev ? sourceMaps.write() : util.noop())
   .pipe(gulp.dest(config.destination))
 });
