@@ -1,7 +1,7 @@
 {
   "name": "PocPostCSS",
   "version": "1.0.0",
-  "description": "",
+  "description": "Post css integrate with gulp, stylelint doiuse, sass like",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
