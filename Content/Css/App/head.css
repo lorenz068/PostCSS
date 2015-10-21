@@ -2,18 +2,15 @@
 @import"./Partials/_utilities.css";
 
 /* Test styles*/
-.test {
-    &_blob1 {
-        position: fixed;
+.nav {
+    &-title {
         font-style: italic;
         font-family: $primaryfontFamily;
         width: $widthMD;
     }
-    &_blob2 {
-        position: fixed;
-    }
-    &_blob3 {
-        position: fixed;
+    &-link {
+        color: green;
+        font-weight: 700;
     }
     &.is-active {
         display: block;

@@ -1,4 +1,4 @@
 # PostCSS
 POC with post Css
 
-Integrate with gulp, stylelint doiuse, sass like
+Integrate with gulp workflow, stylelint doiuse, preCSS (sass like possibilities)

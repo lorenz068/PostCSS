@@ -1,18 +1,20 @@
 var gulp = require("gulp");
+var path = require("path");
 var util = require("gulp-util");
 var concat = require("gulp-concat");
 var sourceMaps = require("gulp-sourcemaps");
 var minifyCSS = require("gulp-minify-css");
 var postcss = require("gulp-postcss");
 var plumber = require("gulp-plumber");
+var rename = require("gulp-rename");
 var reporter = require("postcss-reporter")
 var stylelint = require("stylelint");
 var doiuse = require("doiuse");
 var precss = require("precss")
 
 var config = {
-    production: !!util.env.production,
-    source : {
+    isProduction: !!util.env.production,
+    path : {
         css: "Content/**/*.css",
         js: "Content/**/*.js"
     },
@@ -32,17 +34,16 @@ gulp.task("default", ["watch","css"]);
  * Tasks : Watch
  */
 gulp.task("watch", function() {
-    gulp.watch([config.source.css], ["css"]);
+    gulp.watch([config.path.css], ["css"]);
 });
 
 /* 
  * Tasks : CSS
  */
 gulp.task("css", function() {
-  gulp.src(config.source.css, { cwd: process.cwd() })
+  gulp.src(config.path.css, { cwd: process.cwd() })
   .pipe(plumber())
-  .pipe(postcss(
-      [
+  .pipe(postcss([
         doiuse({
             browsers: config.supportedBrowsers,
             ignore: ["css-mediaqueries"]
@@ -52,12 +53,12 @@ gulp.task("css", function() {
         ),
         precss(),
         reporter({ clearMessages: true })
-    ]
-  ))
-  
+    ]))
   .pipe(sourceMaps.init())
-  .pipe(concat("all.css"))
-  .pipe(config.production ? minifyCSS() : util.noop())
-  .pipe(sourceMaps.write())
+  .pipe(concat("project.name.css"))
+  .pipe(minifyCSS())
+  .pipe(rename({ suffix: ".min" }))
+  // In dev write the sourceMaps 
+  .pipe(config.isProduction ? util.noop() : sourceMaps.write())
   .pipe(gulp.dest("./build"))
 });
