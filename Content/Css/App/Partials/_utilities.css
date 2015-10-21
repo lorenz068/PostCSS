@@ -1,0 +1,5 @@
+@define-mixin sm-to-md {
+    @media (min-width: $widthSM) and (max-width: $widthMD) {
+        @mixin-content;
+    }
+}

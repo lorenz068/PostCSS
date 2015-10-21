@@ -1,0 +1,24 @@
+@import"./Partials/_base.css";
+@import"./Partials/_utilities.css";
+
+/* Component style */
+.component {
+    background: grey;
+    border: 1px solid black;
+    &-title {
+        font-size: 17px;
+    }
+    &-text {
+        padding-top: 15px;
+        color: lightgrey;
+    }
+    &-img {
+        padding: 10px;
+        border: 1px solid $colorBlue;
+        float: right;
+        font-size: 13px;
+    }
+    @mixin sm-to-md {
+        background: $colorBlue;
+    }
+}

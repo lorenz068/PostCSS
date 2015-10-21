@@ -1,0 +1,24 @@
+@import"./Partials/_base.css";
+@import"./Partials/_utilities.css";
+
+/* Local variable */
+$primary-color: #333;
+
+/* Local Rules */
+.class- {
+    &1 {
+        background: -webkit-linear-gradient();
+    }
+    &2 {
+        color: $primary-color;
+    }
+    &3 {
+        color: $colorBlue;
+        -ms-transform: translate(50px, 100px); /* IE 9 */
+        -webkit-transform: translate(50px, 100px); /* Safari */
+        transform: translate(50px, 100px);
+        @mixin sm-to-md {
+            width: inherit;
+        }
+    }
+}
