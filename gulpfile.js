@@ -13,7 +13,7 @@ var doiuse = require("doiuse");
 var precss = require("precss")
 
 var config = {
-    isProduction: !!util.env.production,
+    isDev: !!util.env.dev,
     path : {
         css: "Content/**/*.css",
         js: "Content/**/*.js"
@@ -59,6 +59,6 @@ gulp.task("css", function() {
   .pipe(minifyCSS())
   .pipe(rename({ suffix: ".min" }))
   // In dev write the sourceMaps 
-  .pipe(config.isProduction ? util.noop() : sourceMaps.write())
+  .pipe(config.isDev ? sourceMaps.write() : util.noop())
   .pipe(gulp.dest("./build"))
 });
